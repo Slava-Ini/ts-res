@@ -1,0 +1,18 @@
+{
+  "name": "ts-result",
+  "version": "0.0.1",
+  "description": "TypeScript Result",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "clean": "rimraf dist && rimraf tsconfig.tsbuildinfo",
+    "build": "npm run clean && tsc",
+    "test": "echo \"hello test\""
+  },
+  "author": "Slava.In",
+  "license": "MIT",
+  "devDependencies": {
+    "rimraf": "^4.4.0",
+    "typescript": "^5.0.2"
+  }
+}

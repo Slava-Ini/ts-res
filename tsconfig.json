@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "outDir": "./build",
+    "rootDir": "./lib",
+    "composite": true,
+    "downlevelIteration": true,
+    "declaration": true
+  },
+  "exclude": ["node_modules", "build", "tests"],
+  "include": ["./lib/**/*"]
+}

@@ -1,6 +1,3 @@
-// TODO: remove import
-import { Err, Ok } from "./helpers";
-
 type ThrowType = <T, E extends ErrType>(
   this: Result<T, E>,
   message?: string
@@ -9,6 +6,7 @@ type ElseType = <T, E extends ErrType>(
   this: Result<T, E>,
   callback: (error: E) => T
 ) => T;
+type OrType = <T, E extends ErrType>(this: Result<T, E>, orValue: T) => T;
 
 type ThrowMethod = {
   /**
@@ -39,6 +37,32 @@ type ThrowMethod = {
    * ```
    * */
   throw: ThrowType;
+};
+
+type OrMethod = {
+  /**
+   * @method `or` returns unwrapped result data or returns a back-up value
+   * @param {T} orValue - back-up value to be used in case there was an error. Value type should match `T` type specified in `Result<T, E>`
+   * @returns result data with the type `T`, provided in `Result<T, E>`
+   * @example
+   * ```ts
+   * function getStatusCode(): Result<number, string> {
+   *   const statusCode = Math.floor(Math.random() * 100);
+   *
+   *   if (statusCode > 200 && statusCode < 300) {
+   *      return Ok(statusCode);
+   *   }
+   *
+   *   return Err("Wrong status code");
+   * }
+   *
+   * function obtainStatus(): number {
+   *  return getStatusCode().or(0);
+   * }
+   *
+   * ```
+   * */
+  or: OrType;
 };
 
 type ElseMethod = {
@@ -77,18 +101,39 @@ type ElseMethod = {
   else: ElseType;
 };
 
+type ResultMethods = ThrowMethod & ElseMethod & OrMethod;
+
 export type ErrType = string | Error | undefined | void;
 
 // --- Note ---
 // `E extends ErrType` is not used here for better readability
-// TODO: docs
+/**
+ * @type `Result<T, E>` - is used to signify that the operation may fail. `T` is generic return type of the value, it can be any type, `E` is an error type it's constrained by `string | Error | undefined | void`.
+ *
+ * Value, returned from a function with a type `Result<T, E>` will contain an `ok` boolean field signifying success or fail, if `ok` is `true`, then `Result<T, E>` will also contain `data` field with type `T`, otherwise it will contain an `error` field with type `E`.
+ *
+ * To be able to return a correct value from a function with return type `Result<T, E>` use methods `Ok(T)`, `Err(E)`.
+ *
+ * *Additionally* `Result<T, E>` contains a number of helper methods such as `throw()`, `or()`, `else()` to make handling result as simple as possible
+ * @example
+ * ```ts
+ * function toNumber(str: string): Result<number, Error> {
+ *   const parseResult = Number(str);
+ *
+ *   if (isNaN(parseResult)) {
+ *     return Err(new Error(`Couldn't convert ${str} to number`));
+ *   }
+ *
+ *   return Ok(parseResult);
+ * }
+ *
+ * toNumber("123"); // -> {ok: true, data: 123}
+ * toNumber("abc"); // -> {ok: false, error: Error("Couldn't convert abc to number")}
+ * ```
+ * */
 export type Result<T, E extends string | Error | void | undefined> =
-  | ({
-      ok: true;
-      data: T;
-    } & ThrowMethod &
-      ElseMethod)
-  | ({ ok: false; error: E } & ThrowMethod & ElseMethod);
+  | ({ ok: true; data: T } & ResultMethods)
+  | ({ ok: false; error: E } & ResultMethods);
 
 export type OkOverload = {
   <T>(): Result<T | undefined, never>;
@@ -99,17 +144,3 @@ export type ErrOverload = {
   <E extends ErrType>(): Result<never, E | undefined>;
   <E extends ErrType>(error: E): Result<never, E>;
 };
-
-function getStatusCode(): Result<number, string> {
-  const statusCode = Math.floor(Math.random() * 100);
-
-  if (statusCode > 200 && statusCode < 300) {
-    return Ok(statusCode);
-  }
-
-  if (statusCode < 200) {
-    return Err("Low");
-  }
-
-  return Err("High");
-}

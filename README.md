@@ -31,10 +31,28 @@ if (!parseResult.ok) {
   throw parseResult.error;
 }
 
-const muNumber: number = parseResult.data;
+const muNumber: number = parseResult.data; // Returns 456
+```
+- Use `or()` to provide a back-up value
+
+```ts
+function getStatusCode(): Result<number, string> {
+  const statusCode = Math.floor(Math.random() * 100);
+
+  if (statusCode > 200 && statusCode < 300) {
+    return Ok(statusCode);
+  }
+
+  return Err("Invalide status code");
+}
+
+function obtainStatus(): number {
+  return getStatusCode().or(0); // Returns `statusCode` between 201 and 299 or 0
+}
 ```
 
-- Use `else()` to provide back-up value based on error
+
+- Use `else()` to provide a back-up value based on error
 
 ```ts
 function getStatusCode(): Result<number, string> {
@@ -57,8 +75,8 @@ function obtainStatus(): number {
       return 0;
     }
 
-    return 100;
-  });
+    return 1000;
+  }); // Returns `statusCode` between 201 and 299 or (0 or 1000 depending on error text)
 }
 ```
 

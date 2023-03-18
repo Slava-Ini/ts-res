@@ -8,7 +8,7 @@ TypeScript Result for Error Handling
 
 - Use `throw()` to unwrap the value or throw an error
 
-```ts
+```typescript
 function toNumber(str: string): Result<number, string> {
   const result = Number(str);
 

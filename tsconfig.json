@@ -4,6 +4,7 @@
     "outDir": "./build",
     "rootDir": "./lib",
     "composite": true,
+    "strict": true,
     "downlevelIteration": true,
     "declaration": true
   },

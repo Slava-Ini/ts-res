@@ -33,6 +33,9 @@ jobs:
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
+      - run: |
+            echo "registry=https://registry.npmjs.org/" >> .npmrc
+            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm publish

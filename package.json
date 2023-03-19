@@ -1,11 +1,12 @@
 {
   "name": "ts-res",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "TypeScript Result",
   "repository": "https://github.com/Slava-Ini/ts-result",
   "homepage": "https://github.com/Slava-Ini/ts-result",
   "main": "build/index.js",
   "types": "build/index.d.ts",
+  "tags": ["typescript", "result", "rust"],
   "scripts": {
     "clean": "rimraf dist && rimraf tsconfig.tsbuildinfo",
     "build": "npm run clean && tsc",

@@ -134,13 +134,3 @@ export type ErrType = string | Error | undefined | void;
 export type Result<T, E extends string | Error | void | undefined> =
   | ({ ok: true; data: T } & ResultMethods)
   | ({ ok: false; error: E } & ResultMethods);
-
-export type OkOverload = {
-  <T>(): Result<T | undefined, never>;
-  <T>(data: T): Result<T, never>;
-};
-
-export type ErrOverload = {
-  <E extends ErrType>(): Result<never, E | undefined>;
-  <E extends ErrType>(error: E): Result<never, E>;
-};

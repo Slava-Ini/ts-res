@@ -1,4 +1,4 @@
-import { ErrOverload, ErrType, OkOverload, Result } from "./types";
+import { ErrType, Result } from "./types";
 
 // --- Note ---
 // `throw` is a reserved keyword
@@ -74,9 +74,11 @@ function or<T, E extends ErrType>(this: Result<T, E>, orValue: T): T {
  * }
  * ```
  * */
-export const Ok: OkOverload = <T>(data?: T): Result<T | undefined, never> => {
+export function Ok<T>(): Result<T | undefined, never>;
+export function Ok<T>(data: T): Result<T, never>;
+export function Ok<T>(data?: T): Result<T | undefined, never> {
   return { ok: true, data, throw: throwErr, else: elseDo, or };
-};
+}
 
 /**
  * @method Err - Returns a value with a type `E` of `Result<T, E>` signifying fail of an operation. If the `E` type is `void` or `undefined` can be used without a value.
@@ -106,8 +108,10 @@ export const Ok: OkOverload = <T>(data?: T): Result<T | undefined, never> => {
  * }
  * ```
  * */
-export const Err: ErrOverload = <E extends ErrType>(
+export function Err<E extends ErrType>(): Result<never, E | undefined>;
+export function Err<E extends ErrType>(error: E): Result<never, E>;
+export function Err<E extends ErrType>(
   error?: E
-): Result<never, E | undefined> => {
+): Result<never, E | undefined> {
   return { ok: false, error, throw: throwErr, else: elseDo, or };
-};
+}

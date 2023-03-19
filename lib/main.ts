@@ -14,6 +14,10 @@ function throwErr<T, E extends ErrType>(
       throw new Error(message || this.error || defaultMessage);
     }
 
+    if (message) {
+      this.error.message = message;
+    }
+
     throw this.error;
   }
 
@@ -30,10 +34,17 @@ function elseDo<T, E extends ErrType>(
     return this.data;
   }
 
+  // TODO:
+  // - Tackle the problem of callback return type not being enforced when using `void` | `undefined` as `T`
+  // - In the same situation `or` works well
   return callback(this.error);
 }
 
 function or<T, E extends ErrType>(this: Result<T, E>, orValue: T): T {
+  if (this.ok) {
+    return this.data;
+  }
+
   return orValue;
 }
 

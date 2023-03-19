@@ -1,2 +1,2 @@
 export { Result } from "./types";
-export { Ok, Err } from "./helpers";
+export { Ok, Err } from "./main";

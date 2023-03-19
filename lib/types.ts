@@ -11,7 +11,7 @@ type OrType = <T, E extends ErrType>(this: Result<T, E>, orValue: T) => T;
 type ThrowMethod = {
   /**
    * @method `throw` returns unwrapped result data or throws an error. If the error message wasn't provided and the type of error is `void` or `undefined` will use the default error message.
-   * @param {string | undefined} message - optional message parameter to be used as an error message
+   * @param {string | undefined} message - optional message parameter to be used as an error message (if an `Error` was provided for `E` type it's message will be overwritten by this custom message)
    * @throws provided error or a common `Error` with the default message
    * @returns result data with the type `T`, provided in `Result<T, E>`
    * @example
@@ -92,7 +92,7 @@ type ElseMethod = {
    *      return 0;
    *    }
    *
-   *    return 100;
+   *    return 1000;
    *  });
    * }
    *

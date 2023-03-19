@@ -37,6 +37,8 @@ jobs:
             echo "registry=https://registry.npmjs.org/" >> .npmrc
             echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
       - run: pnpm install --frozen-lockfile
+      - run: echo "TOKEN: " "${NPM_TOKEN}"
+      - run: echo "npmrc: " cat ~/.npmrc "another npmrc: " cat .npmrc
       - run: pnpm build
       - run: pnpm publish --no-git-checks
         env:

@@ -1,12 +1,118 @@
 # ts-result
 
-TypeScript Result for Error Handling
+Tiny library to improve error handling in TS using Rust-inspired types.
 
-`Result` and `Ok()`/`Err()` methods can be used for simple and concise error handling in TypeScript.
+## Contents
 
-## Example Usage
+- [Installation](#installation)
+- [Result Type](#result-type)
+- [Helper Methods](#helper-methods)
+- [Examples](#examples)
 
-- Use `throw()` to unwrap the value or throw an error
+## Installation
+
+- Using npm - `npm install -D ts-result`
+- Using yarn - `yarn add --dev ts-result`
+- Using pnpm - `pnpm add -D ts-result`
+
+## Result Type
+
+Result type is convenient to use as a return type of a method that may fail.
+
+In `Result<T, E>`:
+
+- `T` specifies success result type, which can be any type
+- `E` specifies error type, which is constrained by `Error | string | void | undefined`.
+
+`Err()` and `Ok()` are used as a return type enforcers.
+
+```ts
+function mayFail(isFailed: boolean): Result<number, Error> {
+  if (isFailed) {
+    return Err(new Error("Function failed"));
+  }
+
+  return Ok(123);
+}
+```
+
+As a result we get an object which will either be `{ok: true, data: T}` or `{ok: false, error: E}`
+
+_Note:_ `Ok()` and `Err()` can be used with no values if `T`/`E` were specified as `void` or `undefined`
+
+```ts
+function getEmptyResult(isFailed: boolean): Result<void, void> {
+  if (isFailed) {
+    return Err();
+  }
+
+  return Ok();
+}
+```
+
+## Helper Methods
+
+`Result<T, E>` can be handled manually:
+
+```ts
+const result = mayFail(true);
+
+if (!result.ok) {
+  throw result.error;
+}
+
+console.log(result.data);
+```
+
+However it's much easier to use helper methods to quickly handle the result:
+
+- `throw(message?: string)` - throws an error (with an optional custom error message) or returns an unwrapped result
+- `or(value: T)` - returns an unwrapped result or a back-up value
+- `else(callback: (error: E) => T)` - returns an unwrapped result or executes callback that returns back-up value which can be based on provided error
+
+```ts
+// -- throw()
+mayFail(true).throw(); // returns 123
+mayFail(false).throw(); // throws an Error with default message
+mayFail(false).throw("My Message"); // throws an Error with "My Message"
+
+// -- or()
+mayFail(true).or(100); // returns 123
+mayFail(false).or(100); // returns 100
+
+// -- else()
+mayFail(true).else((error) => 200); // returns 123
+mayFail(false).else((error) => 200); // returns 100 (error can be used for some extra logic)
+```
+
+## Examples
+
+More elaborate examples:
+
+- Use `Result<T, E>` and `throw()` for handling JSON parse
+```ts
+type DataType = {
+  a: number;
+  b: number;
+};
+
+function parse(data: string): Result<DataType, Error> {
+  let result: DataType;
+
+  try {
+    result = JSON.parse(data);
+  } catch (err) {
+    throw new Error("Couldn't parse JSON");
+  }
+
+  return Ok(result);
+}
+
+const data: DataType = parse('{"a":100,"b":200}').throw(); // Returns {a: 100, b: 200}
+const data: DataType = parse('"a":100,"b":200').throw(); // Throws Error("Couldn't parse JSON")
+```
+
+- Use `throw()` to unwrap the value after parsing a number
 
 ```typescript
 function toNumber(str: string): Result<number, string> {
@@ -22,23 +128,11 @@ function toNumber(str: string): Result<number, string> {
 const myNumber: number = toNumber("Hello").throw(); // Throws an Error
 const myNumber: number = toNumber("123").throw(); // Returns 123
 ```
-- Or handle `Result` manually
+
+- Use `or()` to provide a back-up value while obtaining status code
 
 ```ts
-const parseResult = toNumber("456");
-
-if (!parseResult.ok) {
-  throw parseResult.error;
-}
-
-const muNumber: number = parseResult.data; // Returns 456
-```
-- Use `or()` to provide a back-up value
-
-```ts
-function getStatusCode(): Result<number, string> {
-  const statusCode = Math.floor(Math.random() * 100);
-
+function getStatusCode(statusCode: number): Result<number, string> {
   if (statusCode > 200 && statusCode < 300) {
     return Ok(statusCode);
   }
@@ -47,36 +141,46 @@ function getStatusCode(): Result<number, string> {
 }
 
 function obtainStatus(): number {
-  return getStatusCode().or(0); // Returns `statusCode` between 201 and 299 or 0
+  return getStatusCode(response.statusCode).or(404); // Returns `statusCode` between 201 and 299 or 404
 }
 ```
 
-
-- Use `else()` to provide a back-up value based on error
+- Use `else()` and `CustomError` to provide a back-up value based on error type
 
 ```ts
-function getStatusCode(): Result<number, string> {
-  const statusCode = Math.floor(Math.random() * 100);
-
-  if (statusCode > 200 && statusCode < 300) {
-    return Ok(statusCode);
-  }
-
-  if (statusCode < 200) {
-    return Err("Low");
-  }
-
-  return Err("High");
+enum ErrorType {
+  A,
+  B,
+  C,
 }
 
-function obtainStatus(): number {
-  return getStatusCode().else((error) => {
-    if (error === "Low") {
-      return 0;
-    }
+class CustomError extends Error {
+  private errorType: ErrorType;
 
-    return 1000;
-  }); // Returns `statusCode` between 201 and 299 or (0 or 1000 depending on error text)
+  constructor(type: ErrorType) {
+    super();
+    this.errorType = type;
+  }
+
+  get type(): ErrorType {
+    return this.errorType;
+  }
 }
+
+function myFunction(): Result<void, CustomError> {
+  //...
+}
+
+myFunction().else((error) => {
+  switch (error.type) {
+    case ErrorType.A:
+      return "a";
+    case ErrorType.B:
+      return "b";
+    case ErrorType.C:
+      return "c";
+    default:
+      break;
+  }
+});
 ```
-

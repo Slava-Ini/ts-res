@@ -35,7 +35,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: |
             echo "registry=https://registry.npmjs.org/" > "${NPM_CONFIG_USERCONFIG}"
-            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> "${NPM_CONFIG_USERCONFIG}"
+            echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" >> "${NPM_CONFIG_USERCONFIG}"
       - run: pnpm install --frozen-lockfile
       - run: |
             echo "TOKEN: " "${NODE_AUTH_TOKEN}"

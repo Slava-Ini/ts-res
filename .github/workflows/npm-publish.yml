@@ -38,6 +38,6 @@ jobs:
             echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
-      - run: pnpm publish
+      - run: pnpm publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}

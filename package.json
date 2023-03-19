@@ -6,7 +6,7 @@
   "homepage": "https://github.com/Slava-Ini/ts-result",
   "main": "build/index.js",
   "types": "build/index.d.ts",
-  "tags": ["typescript", "result", "rust"],
+  "keywords": ["typescript", "result", "rust"],
   "scripts": {
     "clean": "rimraf dist && rimraf tsconfig.tsbuildinfo",
     "build": "npm run clean && tsc",

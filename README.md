@@ -1,4 +1,4 @@
-# ts-result
+# ts-res
 
 Tiny library to improve error handling in TS using Rust-inspired types.
 

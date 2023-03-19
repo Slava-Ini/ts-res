@@ -1,7 +1,8 @@
 {
-  "name": "ts-result",
+  "name": "ts-res",
   "version": "0.0.1",
   "description": "TypeScript Result",
+  "repository": "https://github.com/Slava-Ini/ts-result",
   "homepage": "https://github.com/Slava-Ini/ts-result",
   "main": "build/index.js",
   "types": "build/index.d.ts",

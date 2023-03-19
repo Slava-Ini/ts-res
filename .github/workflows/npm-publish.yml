@@ -34,13 +34,13 @@ jobs:
           node-version: 16
           registry-url: https://registry.npmjs.org/
       - run: |
-            echo "registry=https://registry.npmjs.org/" >> .npmrc
-            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
+            echo "registry=https://registry.npmjs.org/" >> "${NPM_CONFIG_USERCONFIG}"
+            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> "${NPM_CONFIG_USERCONFIG}"
       - run: pnpm install --frozen-lockfile
       - run: |
-            echo "TOKEN: " "${NPM_TOKEN}"
-            cat ~/.npmrc
+            echo "TOKEN: " "${NODE_AUTH_TOKEN}"
+            cat "${NPM_CONFIG_USERCONFIG}"
       - run: pnpm build
       - run: pnpm publish --no-git-checks
         env:
-          NPM_TOKEN: ${{secrets.npm_token}}
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}

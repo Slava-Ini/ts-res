@@ -39,10 +39,5 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: pnpm install --frozen-lockfile
-      - run: |
-            echo "TOKEN: " "${NODE_AUTH_TOKEN}"
-            cat "${NPM_CONFIG_USERCONFIG}"
       - run: pnpm build
       - run: pnpm publish --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

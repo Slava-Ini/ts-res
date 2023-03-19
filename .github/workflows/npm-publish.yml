@@ -39,8 +39,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: |
             echo "TOKEN: " "${NPM_TOKEN}"
-            echo "npmrc: " cat ~/.npmrc "another npmrc: " cat .npmrc
+            cat ~/.npmrc
       - run: pnpm build
       - run: pnpm publish --no-git-checks
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+          NPM_TOKEN: ${{secrets.npm_token}}

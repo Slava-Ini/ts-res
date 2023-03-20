@@ -82,7 +82,7 @@ mayFail(false).or(100); // returns 100
 
 // -- else()
 mayFail(true).else((error) => 200); // returns 123
-mayFail(false).else((error) => 200); // returns 100 (error can be used for some extra logic)
+mayFail(false).else((error) => 200); // returns 200 (error can be used for some extra logic)
 ```
 
 ## Examples

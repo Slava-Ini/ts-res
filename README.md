@@ -89,29 +89,6 @@ mayFail(false).else((error) => 200); // returns 200 (error can be used for some 
 
 More elaborate examples:
 
-- Use `Result<T, E>` and `throw()` for handling JSON parse
-```ts
-type DataType = {
-  a: number;
-  b: number;
-};
-
-function parse(data: string): Result<DataType, Error> {
-  let result: DataType;
-
-  try {
-    result = JSON.parse(data);
-  } catch (err) {
-    throw new Error("Couldn't parse JSON");
-  }
-
-  return Ok(result);
-}
-
-const data: DataType = parse('{"a":100,"b":200}').throw(); // Returns {a: 100, b: 200}
-const data: DataType = parse('"a":100,"b":200').throw(); // Throws Error("Couldn't parse JSON")
-```
-
 - Use `throw()` to unwrap the value after parsing a number
 
 ```typescript

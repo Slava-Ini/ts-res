@@ -3,9 +3,13 @@
     "target": "es6",
     "outDir": "./build",
     "rootDir": "./lib",
+    "module": "CommonJS",
     "composite": true,
     "strict": true,
+    "allowSyntheticDefaultImports": true,
     "downlevelIteration": true,
+    "esModuleInterop": true,
+    "sourceMap": true,
     "moduleResolution": "node",
     "declaration": true
   },

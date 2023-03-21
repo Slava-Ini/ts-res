@@ -7,6 +7,10 @@ type ElseType = <T, E extends ErrType>(
   callback: (error: E) => T
 ) => T;
 type OrType = <T, E extends ErrType>(this: Result<T, E>, orValue: T) => T;
+type AndType = <T, E extends ErrType>(
+  this: Result<T, E>,
+  callback: (result: T) => void
+) => void;
 
 type ThrowMethod = {
   /**
@@ -101,7 +105,32 @@ type ElseMethod = {
   else: ElseType;
 };
 
-type ResultMethods = ThrowMethod & ElseMethod & OrMethod;
+type AndMethod = {
+  /**
+   * @method `and` handles result in a callback ignoring the error
+   * @param {(result: T) => void} callback - callback which will be executed if result ok field will is true. Callback is provided with `result` argument with the data type provided as `T` in `Result<T, E>`
+   * @returns void
+   * @example
+   * ```ts
+   * function tryReadFile(): Result<string, void> {
+   *   const text = fs.readFile('~/file.txt');
+   *
+   *   if (!text) {
+   *     return Err();
+   *   }
+   *
+   *   return Ok(text);
+   * }
+   *
+   * tryReadFile.and((text) => {
+   *   console.log(text);
+   * })
+   * ```
+   * */
+  and: AndType;
+};
+
+type ResultMethods = ThrowMethod & ElseMethod & OrMethod & AndMethod;
 
 export type ErrType = string | Error | undefined | void;
 

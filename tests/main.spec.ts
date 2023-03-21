@@ -67,6 +67,19 @@ describe("Result<number, Error>", () => {
     expect(result).toBe(123);
     expect(falsyResult).toBe(100);
   });
+
+  test("and", () => {
+    const mockFn = jest.fn();
+
+    toNumber("123").and((result) => {
+      expect(result).toBe(123);
+    });
+    toNumber("abc").and((_) => {
+      mockFn();
+    });
+
+    expect(mockFn).not.toHaveBeenCalled();
+  });
 });
 
 describe("Result<void, void>", () => {
@@ -129,6 +142,19 @@ describe("Result<void, void>", () => {
 
     expect(result).toBe(undefined);
     expect(falsyResult).toBe(undefined);
+  });
+
+  test("and", () => {
+    const mockFn = jest.fn();
+
+    getEmptyResult(true).and((result) => {
+      expect(result).toBe(undefined);
+    });
+    getEmptyResult(false).and((_) => {
+      mockFn();
+    });
+
+    expect(mockFn).not.toHaveBeenCalled();
   });
 });
 
@@ -193,5 +219,18 @@ describe("Result<void, CustomError>", () => {
     const result = getCustomError(ErrorType.C).else((_) => undefined);
 
     expect(result).toBe(undefined);
+  });
+
+  test("and", () => {
+    const mockFn = jest.fn();
+
+    getCustomError(ErrorType.A).and((result) => {
+      expect(result).toBe(undefined);
+    });
+    getCustomError(ErrorType.A).and((_) => {
+      mockFn();
+    });
+
+    expect(mockFn).not.toHaveBeenCalled();
   });
 });

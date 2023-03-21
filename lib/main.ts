@@ -48,6 +48,15 @@ function or<T, E extends ErrType>(this: Result<T, E>, orValue: T): T {
   return orValue;
 }
 
+function and<T, E extends ErrType>(
+  this: Result<T, E>,
+  callback: (result: T) => void
+): void {
+  if (this.ok) {
+    callback(this.data);
+  }
+}
+
 /**
  * @method Ok - Returns a value with a type `T` of `Result<T, E>` signifying success of an operation. If the `T` type is `void` or `undefined` can be used without a value.
  * @returns `{ok: true, data: T}` result object.
@@ -77,7 +86,7 @@ function or<T, E extends ErrType>(this: Result<T, E>, orValue: T): T {
 export function Ok<T>(): Result<T | undefined, never>;
 export function Ok<T>(data: T): Result<T, never>;
 export function Ok<T>(data?: T): Result<T | undefined, never> {
-  return { ok: true, data, throw: throwErr, else: elseDo, or };
+  return { ok: true, data, throw: throwErr, else: elseDo, or, and };
 }
 
 /**
@@ -113,5 +122,5 @@ export function Err<E extends ErrType>(error: E): Result<never, E>;
 export function Err<E extends ErrType>(
   error?: E
 ): Result<never, E | undefined> {
-  return { ok: false, error, throw: throwErr, else: elseDo, or };
+  return { ok: false, error, throw: throwErr, else: elseDo, or, and };
 }

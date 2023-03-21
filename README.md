@@ -69,6 +69,7 @@ However it's much easier to use helper methods to quickly handle the result:
 - `throw(message?: string)` - throws an error (with an optional custom error message) or returns an unwrapped result
 - `or(value: T)` - returns an unwrapped result or a back-up value
 - `else(callback: (error: E) => T)` - returns an unwrapped result or executes callback that returns back-up value which can be based on provided error
+- `and(callback: (result: T) => void)` - handles a result in a callback while ignoring an error, doesn't return anything
 
 ```ts
 // -- throw()
@@ -83,6 +84,14 @@ mayFail(false).or(100); // returns 100
 // -- else()
 mayFail(true).else((error) => 200); // returns 123
 mayFail(false).else((error) => 200); // returns 200 (error can be used for some extra logic)
+
+// -- and()
+mayFail(true).and((result) => { 
+  console.log(result);
+}); // logs 123
+mayFail(false).and((result) => {
+  console.log(result);
+}); // doesn't do anything
 ```
 
 ## Examples
@@ -160,4 +169,22 @@ myFunction().else((error) => {
       break;
   }
 });
+```
+
+- Use `and()` to handle a result of writing data to `localStorage` and ignore the error
+```ts
+function readLocalStorage(key: string): Result<string, void> {
+  const data = localStorage.getItem(key);
+
+  if (!data) {
+    return Err();
+  }
+
+  return Ok(data);
+}
+
+readLocalStorage.and((data) => {
+  const parsedData = JSON.parse(data);
+  console.log(parsedData);
+})
 ```

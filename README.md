@@ -11,9 +11,9 @@ Tiny library to improve error handling in TS using Rust-inspired types.
 
 ## Installation
 
-- Using npm - `npm install -D ts-result`
-- Using yarn - `yarn add --dev ts-result`
-- Using pnpm - `pnpm add -D ts-result`
+- Using npm - `npm install ts-result`
+- Using yarn - `yarn add ts-result`
+- Using pnpm - `pnpm add ts-result`
 
 ## Result Type
 

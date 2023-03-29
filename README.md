@@ -1,3 +1,5 @@
+[![https://nodei.co/npm/ts-res.png?mini=true](https://nodei.co/npm/ts-res.png?mini=true)](https://www.npmjs.com/package/ts-res)
+
 # ts-res
 
 Tiny library to improve error handling in TS using Rust-inspired types.
@@ -11,9 +13,9 @@ Tiny library to improve error handling in TS using Rust-inspired types.
 
 ## Installation
 
-- Using npm - `npm install ts-result`
-- Using yarn - `yarn add ts-result`
-- Using pnpm - `pnpm add ts-result`
+- Using npm - `npm install ts-res`
+- Using yarn - `yarn add ts-res`
+- Using pnpm - `pnpm add ts-res`
 
 ## Result Type
 
@@ -123,7 +125,7 @@ function getStatusCode(statusCode: number): Result<number, string> {
     return Ok(statusCode);
   }
 
-  return Err("Invalide status code");
+  return Err("Invalid status code");
 }
 
 function obtainStatus(): number {

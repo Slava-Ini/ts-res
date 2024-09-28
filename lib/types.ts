@@ -10,7 +10,7 @@ type OrType = <T, E extends ErrType>(this: Result<T, E>, orValue: T) => T;
 type AndType = <T, E extends ErrType>(
   this: Result<T, E>,
   callback: (result: T) => void
-) => void;
+) => Result<T, E>;
 
 type ThrowMethod = {
   /**
@@ -109,7 +109,7 @@ type AndMethod = {
   /**
    * @method `and` handles result in a callback ignoring the error
    * @param {(result: T) => void} callback - callback which will be executed if result ok field will is true. Callback is provided with `result` argument with the data type provided as `T` in `Result<T, E>`
-   * @returns void
+   * @returns `Result<T, E>` allowing for chaining
    * @example
    * ```ts
    * function tryReadFile(): Result<string, void> {
@@ -125,6 +125,29 @@ type AndMethod = {
    * tryReadFile.and((text) => {
    *   console.log(text);
    * })
+   * ```
+   * <br/>
+   *
+   * @example
+   * ```ts
+   * function toNumber(str: string): Result<number, Error> {
+   *    const parseResult = Number(str);
+   *
+   *    if (isNaN(parseResult)) {
+   *       return Err(new Error(`Couldn't convert ${str} to number`));
+   *    }
+   *
+   *    return Ok(parseResult);
+   * }
+   *
+   * // Chaining and method
+   * toNumber("123")
+   *    .and((number) => {
+   *       console.log(number);
+   *    })
+   *    .else((error) => {
+   *       console.error(error);
+   *    });
    * ```
    * */
   and: AndType;

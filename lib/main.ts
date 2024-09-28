@@ -51,10 +51,12 @@ function or<T, E extends ErrType>(this: Result<T, E>, orValue: T): T {
 function and<T, E extends ErrType>(
   this: Result<T, E>,
   callback: (result: T) => void
-): void {
+): Result<T, E> {
   if (this.ok) {
     callback(this.data);
   }
+
+  return this;
 }
 
 /**
@@ -93,7 +95,7 @@ export function Ok<T>(data?: T): Result<T | undefined, never> {
  * @method Err - Returns a value with a type `E` of `Result<T, E>` signifying fail of an operation. If the `E` type is `void` or `undefined` can be used without a value.
  *
  * *Note:* `E` type is constrained by `undefined | void | string | Error`, custom error type that extends native `Error` also satisfies type boundaries
- * @returns `{ok: fale, error: E}` result object.
+ * @returns `{ok: false, error: E}` result object.
  * @example
  * ```ts
  * function toNumber(str: string): Result<number, Error> {

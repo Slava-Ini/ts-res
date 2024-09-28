@@ -80,6 +80,30 @@ describe("Result<number, Error>", () => {
 
     expect(mockFn).not.toHaveBeenCalled();
   });
+
+  test("and chaining", () => {
+    const mockFn = jest.fn();
+
+    toNumber("123")
+      .and((result) => {
+        expect(result).toBe(123);
+        mockFn();
+      })
+      .or(100);
+
+    expect(mockFn).toHaveBeenCalled();
+
+    const mockFn2 = jest.fn();
+
+    const result = toNumber("abc")
+      .and((_) => {
+        mockFn();
+      })
+      .or(100);
+
+    expect(result).toBe(100);
+    expect(mockFn2).not.toHaveBeenCalled();
+  });
 });
 
 describe("Result<void, void>", () => {
@@ -155,6 +179,29 @@ describe("Result<void, void>", () => {
     });
 
     expect(mockFn).not.toHaveBeenCalled();
+  });
+
+  test("and chaining", () => {
+    const mockFn = jest.fn();
+
+    getEmptyResult(true)
+      .and((result) => {
+        expect(result).toBe(undefined);
+        mockFn();
+      })
+      .or(undefined);
+
+    expect(mockFn).toHaveBeenCalled();
+
+    const mockFn2 = jest.fn();
+
+    getEmptyResult(false)
+      .and((_) => {
+        mockFn();
+      })
+      .or(undefined);
+
+    expect(mockFn2).not.toHaveBeenCalled();
   });
 });
 
@@ -232,5 +279,28 @@ describe("Result<void, CustomError>", () => {
     });
 
     expect(mockFn).not.toHaveBeenCalled();
+  });
+
+  test("and chaining", () => {
+    const mockFn = jest.fn();
+
+    getCustomError(ErrorType.A)
+      .and((result) => {
+        expect(result).toBe(undefined);
+        mockFn();
+      })
+      .or(undefined);
+
+    expect(mockFn).not.toHaveBeenCalled();
+
+    const mockFn2 = jest.fn();
+
+    getCustomError(ErrorType.A)
+      .and((_) => {
+        mockFn2();
+      })
+      .or(undefined);
+
+    expect(mockFn2).not.toHaveBeenCalled();
   });
 });

@@ -71,7 +71,7 @@ However it's much easier to use helper methods to quickly handle the result:
 - `throw(message?: string)` - throws an error (with an optional custom error message) or returns an unwrapped result
 - `or(value: T)` - returns an unwrapped result or a back-up value
 - `else(callback: (error: E) => T)` - returns an unwrapped result or executes callback that returns back-up value which can be based on provided error
-- `and(callback: (result: T) => void)` - handles a result in a callback while ignoring an error, doesn't return anything
+- `and(callback: (result: T) => Result<T, E>)` - handles a result in a callback while ignoring an error, returns the result allowing for chaining
 
 ```ts
 // -- throw()
@@ -189,4 +189,34 @@ readLocalStorage.and((data) => {
   const parsedData = JSON.parse(data);
   console.log(parsedData);
 })
+```
+
+- Use `and()` for handling http response data and chaining it with another method
+```ts
+type User = {
+  name: string;
+  age: number;
+};
+
+async function fetchUserData(): Promise<Result<User, Error>> {
+  const response = await fetch("https://api.example.com/user");
+
+  if (!response.ok) {
+    return Err(new Error("Failed to fetch user data"));
+  }
+
+  const data = await response.json();
+
+  return Ok(data);
+}
+
+const result = await fetchUserData();
+
+result
+  .and((user) => {
+     console.log(user);
+  })
+  .else((error) => {
+    console.error(error);
+  });
 ```

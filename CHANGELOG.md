@@ -1,6 +1,11 @@
 # Changelog
 All changes in this project will be documented in this file.
 
+## 1.2.1 (2024-09-30)
+
+### Update
+- Fix the issue of a build not being published properly
+
 ## 1.2.0 (2024-09-28)
 
 ### Add

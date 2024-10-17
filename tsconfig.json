@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es5",
     "outDir": "./build",
+    "lib": ["es6"],
     "rootDir": "./lib",
-    "module": "CommonJS",
+    "module": "commonjs",
     "composite": true,
     "strict": true,
     "allowSyntheticDefaultImports": true,
